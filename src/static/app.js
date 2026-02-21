@@ -44,16 +44,17 @@ document.addEventListener("DOMContentLoaded", () => {
   // Handle form submission
   signupForm.addEventListener("submit", async (event) => {
     event.preventDefault();
+    const submitButton = signupForm.querySelector('button[type="submit"]');
+    submitButton.disabled = true;
 
-    const email = document.getElementById("email").value;
+    const email = document.getElementById("email").value.trim().toLowerCase();
     const activity = document.getElementById("activity").value;
+
 
     try {
       const response = await fetch(
         `/activities/${encodeURIComponent(activity)}/signup?email=${encodeURIComponent(email)}`,
-        {
-          method: "POST",
-        }
+        { method: "POST" }
       );
 
       const result = await response.json();
@@ -78,6 +79,8 @@ document.addEventListener("DOMContentLoaded", () => {
       messageDiv.className = "error";
       messageDiv.classList.remove("hidden");
       console.error("Error signing up:", error);
+    } finally {
+      submitButton.disabled = false;
     }
   });
 
